@@ -1,0 +1,29 @@
+[{
+    "description": "Fierce violet creature. Very durable and tanky.",
+    "image": "https://eincode.mypinata.cloud/ipfs/QmaQYCrX9Fg2kGijqapTYgpMXV7QPPzMwGrSRfV9TvTsfM/Creature_1.png",
+    "name": "Eincode Creature #1",
+    "attributes": [
+      {
+        "trait_type": "latitude",
+        "value": "20"
+      },
+      {
+        "trait_type": "longitude",
+        "value": "100"
+      }
+    ]
+  },{
+    "description": "Fierce blueish creature. Avarage in attack and speed.",
+    "image": "https://eincode.mypinata.cloud/ipfs/QmaQYCrX9Fg2kGijqapTYgpMXV7QPPzMwGrSRfV9TvTsfM/Creature_2.png",
+    "name": "Eincode Creature #2",
+    "attributes": [
+        {
+            "trait_type": "latitude",
+            "value": "50"
+          },
+          {
+            "trait_type": "longitude",
+            "value": "200"
+          }
+    ]
+  }]
