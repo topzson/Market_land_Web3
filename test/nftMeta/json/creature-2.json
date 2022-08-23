@@ -1,0 +1,15 @@
+{
+    "description": "Blueeish creature. Very durable and tanky.",
+    "image": "https://gateway.pinata.cloud/ipfs/QmbiE5ZdZb97C7WuCmbSQ6o7yHn4FRroojwmGDLtevPHC7",
+    "name": "Eincode Creature #1",
+    "attributes": [
+        {
+            "trait_type": "latitude",
+            "value": "20"
+        },
+        {
+            "trait_type": "longitude",
+            "value": "100"
+        }
+    ]
+}
