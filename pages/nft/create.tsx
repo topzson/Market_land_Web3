@@ -8,11 +8,19 @@ import Link from 'next/link'
 import { NftMeta, PinataRes } from '@_types/nft';
 import axios from 'axios';
 import { useWeb3 } from '@providers/web3';
+const ALLOWED_FIELDS = ["name", "description", "image", "attributes"];
+import { ethers } from 'ethers';
+import { toast } from "react-toastify";
+import { useNetwork } from '@hooks/web3';
+import { ExclamationIcon } from '@heroicons/react/solid';
+
 
 const NftCreate: NextPage = () => {
-  const {ethereum} = useWeb3();
+  const {ethereum, contract} = useWeb3();
+  const {network} = useNetwork();
   const [nftURI, setNftURI] = useState("");
   const [hasURI, setHasURI] = useState(false);
+  const [price, setPrice] = useState("");
   const [nftMeta, setNftMeta] = useState<NftMeta>({
     name: "",
     description: "",
@@ -49,13 +57,20 @@ const NftCreate: NextPage = () => {
     
     try {
       const {signedData, account} = await getSignedData();
-      const res = await axios.post("/api/verify-image", {
+      const promise = axios.post("/api/verify-image", {
         address: account,
         signature: signedData,
         bytes,
         contentType: file.type,
         fileName: file.name.replace(/\.[^/.]+$/, "")
       });
+      const res = await toast.promise(
+        promise, {
+          pending: "Uploading image",
+          success: "Image uploaded",
+          error: "Image upload error"
+        }
+      )
 
       const data = res.data as PinataRes;
 
@@ -84,19 +99,81 @@ const NftCreate: NextPage = () => {
     })
   }
 
-  const createNft = async () => {
+  const uploadMetadata = async () => {
     try {
       const {signedData, account} = await getSignedData();
 
-      await axios.post("/api/verify", {
+      const promise = axios.post("/api/verify", {
         address: account,
         signature: signedData,
         nft: nftMeta
       })
+      const res = await toast.promise(
+        promise, {
+          pending: "Uploading metadata",
+          success: "Metadata uploaded",
+          error: "Metadata upload error"
+        }
+      )
+      const data = res.data as PinataRes;
+      setNftURI(`${process.env.NEXT_PUBLIC_PINATA_DOMAIN}/ipfs/${data.IpfsHash}`);
 
     } catch (e: any) {
       console.error(e.message);
     }
+  }
+  const createNft = async () => {
+    try {
+      const nftRes = await axios.get(nftURI);
+      const content = nftRes.data;
+
+      Object.keys(content).forEach(key => {
+        if (!ALLOWED_FIELDS.includes(key)) {
+          throw new Error("Invalid Json structure");
+        }
+      })
+
+      const tx = await contract?.mintToken(
+        nftURI,
+        ethers.utils.parseEther(price), {
+          value: ethers.utils.parseEther(0.025.toString())
+        }
+      );
+
+      await toast.promise(
+        tx!.wait(), {
+          pending: "Uploading metadata",
+          success: "Metadata uploaded",
+          error: "Metadata upload error"
+        }
+      );
+    } catch(e: any) {
+      console.error(e.message);
+    }
+  }
+  if (!network.isConnectedToNetwork) {
+    return (
+      <BaseLayout>
+        <div className="rounded-md bg-yellow-50 p-4 mt-10">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <ExclamationIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-yellow-800">Attention needed</h3>
+              <div className="mt-2 text-sm text-yellow-700">
+                <p>
+                { network.isLoading ?
+                  "Loading..." :
+                  `Connect to ${network.targetNetwork}`
+                }
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </BaseLayout>
+    )
   }
 
   return (
@@ -173,6 +250,8 @@ const NftCreate: NextPage = () => {
                       </label>
                       <div className="mt-1 flex rounded-md shadow-sm">
                         <input
+                          onChange={(e) => setPrice(e.target.value)}
+                          value={price}
                           type="number"
                           name="price"
                           id="price"
@@ -184,6 +263,7 @@ const NftCreate: NextPage = () => {
                   </div>
                   <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
                     <button
+                      onClick={createNft}
                       type="button"
                       className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
@@ -308,7 +388,7 @@ const NftCreate: NextPage = () => {
                 </div>
                 <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
                   <button
-                    onClick={createNft}
+                    onClick={uploadMetadata}
                     type="button"
                     className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
