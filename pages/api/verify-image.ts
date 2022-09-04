@@ -6,6 +6,14 @@ import { addressCheckMiddleware, pinataApiKey, pinataSecretApiKey, withSession }
 import FormData from "form-data";
 import axios from "axios";
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '50mb',
+    },
+  },
+}
+
 export default withSession(async (
   req: NextApiRequest & {session: Session}, 
   res: NextApiResponse
