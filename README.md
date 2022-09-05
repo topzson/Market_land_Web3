@@ -1,6 +1,6 @@
 1. npm install
 2. สร้างไฟล์ .evm.production 
-\* NEXT_PUBLIC_NETWORK_ID=5   
+*\ NEXT_PUBLIC_NETWORK_ID=5   
 NEXT_PUBLIC_TARGET_CHAIN_ID=5
 NEXT_PUBLIC_PINATA_DOMAIN=https://gateway.pinata.cloud
 
