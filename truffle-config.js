@@ -11,15 +11,15 @@ module.exports = {
      network_id: "*",
     },
 
-    ropsten:{
+    goerli:{
       provider:()=> 
         new HDWalletProvider(
           keys.PRIVATE_KEY,
           keys.INFURA_ROPSTEN_URL
         ),
-      network_id: 3,
-      gas: 5500000,
-      gasPrice: 20000000000,
+      network_id: '5',
+      gas: 4465030,
+      gasPrice: 10000000000,
       confirmations: 2,
       timeoutBlocks: 200
     }

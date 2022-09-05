@@ -16,7 +16,7 @@ contract NftMarket is ERC721URIStorage, Ownable {
     address creator;
     bool isListed;
   }
-  uint public listingPrice = 0.005 ether;
+  uint public listingPrice = 0.025 ether;
 
   Counters.Counter private _listedItems;
   Counters.Counter private _tokenIds;
