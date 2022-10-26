@@ -7,10 +7,10 @@ NEXT_PUBLIC_PINATA_DOMAIN=https://gateway.pinata.cloud
 
 SECRET_COOKIE_PASSWORD=asdopi1h23ocn1p23iu2pgpokwe2oi1ais
 
-PINATA_API_KEY=12f8842f23f42f469ed4
-PINATA_SECRET_API_KEY=c50881ac8267b6d568ceea8e09b194105d563f3893c03867bbe9b10f902b248c
+PINATA_API_KEY={your api key}
+PINATA_SECRET_API_KEY={your api key}
 
-INFURA_ROPSTEN_URL=https://goerli.infura.io/v3/4b33ab96264043278161855d52c26c0b
+INFURA_ROPSTEN_URL=https://goerli.infura.io/v3/{your api key}
 ```
 
 ```
